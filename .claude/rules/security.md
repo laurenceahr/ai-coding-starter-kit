@@ -2,7 +2,7 @@
 paths:
   - "src/app/api/**"
   - ".env*"
-  - "supabase/**"
+  - "src/lib/auth*"
   - "next.config.*"
 ---
 
@@ -21,7 +21,7 @@ paths:
 
 ## Authentication
 - Always verify authentication before processing API requests
-- Use Supabase RLS as a second line of defense
+- Use NextAuth.js session verification on all protected routes
 - Implement rate limiting on authentication endpoints
 
 ## Security Headers
@@ -31,6 +31,6 @@ paths:
 - Strict-Transport-Security with includeSubDomains
 
 ## Code Review Triggers
-- Any changes to RLS policies require explicit user approval
+- Any changes to database access policies require explicit user approval
 - Any changes to authentication flow require explicit user approval
 - Any new environment variables must be documented in .env.local.example

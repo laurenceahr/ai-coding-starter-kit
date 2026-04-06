@@ -47,8 +47,8 @@ import { unstable_cache } from 'next/cache'
 
 export const getStats = unstable_cache(
   async () => {
-    const { data } = await supabase.from('stats').select('*')
-    return data
+    const { rows } = await db.query('SELECT * FROM stats')
+    return rows
   },
   ['dashboard-stats'],
   { revalidate: 3600 } // Refresh every hour
@@ -63,5 +63,5 @@ export const getStats = unstable_cache(
 - [ ] No unnecessary client-side JavaScript (`"use client"` only when needed)
 
 ## Automated Monitoring
-- **Vercel Analytics** - Automatic on Pro plan, shows Core Web Vitals
-- **Vercel Speed Insights** - Real user performance data
+- **Lighthouse CI** - Run Lighthouse audits in CI/CD pipelines, track Core Web Vitals over time
+- **web-vitals library** - Collect real user performance data (LCP, FID, CLS) and send to your analytics endpoint

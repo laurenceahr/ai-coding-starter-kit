@@ -6,10 +6,29 @@
 
 - **Framework:** Next.js 16 (App Router), TypeScript
 - **Styling:** Tailwind CSS + shadcn/ui (copy-paste components)
-- **Backend:** Supabase (PostgreSQL + Auth + Storage) - optional
-- **Deployment:** Vercel
+- **Backend:** PostgreSQL (Sevalla) + NextAuth.js + S3-kompatibles Object Storage (Sevalla)
+- **Deployment:** Sevalla (Application Hosting)
 - **Validation:** Zod + react-hook-form
 - **State:** React useState / Context API
+
+## Auth & Database Patterns
+
+- **Auth:** NextAuth.js with Credentials provider (`src/lib/auth.ts`), JWT strategy, 7-day session
+- **DB:** PostgreSQL via `pg` Pool (`src/lib/db.ts`) — use parameterized `query(sql, params)` helper
+- **Session check (server):** `getServerSession(authOptions)` from `next-auth`
+- **Session check (client):** `useSession()` from `next-auth/react`
+- **Session check (middleware):** `getToken()` from `next-auth/jwt`
+- **Single-user system:** Only one account allowed — registration blocked after first user
+- **API token encryption:** pgcrypto `pgp_sym_encrypt` with `TOKEN_ENCRYPTION_KEY` env var
+- **UI language:** German — all user-facing text in German (NFA-504)
+
+## Environment Variables
+
+See `.env.local.example` for all required vars:
+- `DATABASE_URL` — Sevalla PostgreSQL connection string
+- `NEXTAUTH_URL` — App URL (http://localhost:3000 locally)
+- `NEXTAUTH_SECRET` — NextAuth session encryption secret
+- `TOKEN_ENCRYPTION_KEY` — pgcrypto key for API token storage
 
 ## Project Structure
 
@@ -19,7 +38,7 @@ src/
   components/
     ui/             shadcn/ui components (NEVER recreate these)
   hooks/            Custom React hooks
-  lib/              Utilities (supabase.ts, utils.ts)
+  lib/              Utilities (db.ts, auth.ts, utils.ts)
 features/           Feature specifications (PROJ-X-name.md)
   INDEX.md          Feature status overview
 docs/
@@ -32,9 +51,9 @@ docs/
 1. `/requirements` - Create feature spec from idea
 2. `/architecture` - Design tech architecture (PM-friendly, no code)
 3. `/frontend` - Build UI components (shadcn/ui first!)
-4. `/backend` - Build APIs, database, RLS policies
+4. `/backend` - Build APIs, database, server-side logic
 5. `/qa` - Test against acceptance criteria + security audit
-6. `/deploy` - Deploy to Vercel + production-ready checks
+6. `/deploy` - Deploy to Sevalla + production-ready checks
 
 ## Feature Tracking
 

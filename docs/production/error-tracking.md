@@ -18,7 +18,7 @@ This automatically:
 - Updates `next.config.ts` with Sentry webpack plugin
 
 ### 3. Add Environment Variables
-Add to `.env.local` (local) and Vercel Dashboard (production):
+Add to `.env.local` (local) and Sevalla Dashboard (production):
 ```bash
 SENTRY_DSN=https://xxx@xxx.ingest.sentry.io/xxx
 NEXT_PUBLIC_SENTRY_DSN=https://xxx@xxx.ingest.sentry.io/xxx
@@ -40,4 +40,4 @@ throw new Error("Sentry test error")
 - Performance monitoring (optional)
 
 ## Alternative
-**Vercel Error Tracking** - Built-in, simpler, but fewer features. Available in Vercel Dashboard under "Monitoring".
+**Sevalla application logs** - Built-in logging available in the Sevalla Dashboard. Simpler than Sentry, but lacks advanced error grouping, deduplication, and alerting features.

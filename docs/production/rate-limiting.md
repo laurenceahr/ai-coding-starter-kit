@@ -98,4 +98,4 @@ export const config = {
 | File Upload | 5 requests | 1 minute |
 
 ## Alternative
-**Vercel Edge Config** - Simpler but less flexible. Built into Vercel, no external service needed.
+Sevalla does not have a built-in rate limiter -- use Upstash Redis as shown above.

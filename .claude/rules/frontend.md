@@ -28,7 +28,8 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
 - Keep components small and focused
 - Use TypeScript interfaces for all props
 
-## Auth Best Practices (Supabase)
-- Use `window.location.href` for post-login redirect (not `router.push`)
-- Always verify `data.session` exists before redirecting
+## Auth Best Practices (NextAuth.js)
+- Use `signIn()` / `signOut()` from `next-auth/react` for auth actions
+- Use `useSession()` hook for client-side session access
+- Use `getServerSession()` for server-side session access
 - Always reset loading state in all code paths (success, error, finally)

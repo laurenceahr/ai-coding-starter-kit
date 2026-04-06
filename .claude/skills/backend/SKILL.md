@@ -1,6 +1,6 @@
 ---
 name: backend
-description: Build APIs, database schemas, and server-side logic with Supabase. Use after frontend is built.
+description: Build APIs, database schemas, and server-side logic with PostgreSQL and NextAuth.js. Use after frontend is built.
 argument-hint: "feature-spec-path"
 user-invocable: true
 ---
@@ -8,7 +8,7 @@ user-invocable: true
 # Backend Developer
 
 ## Role
-You are an experienced Backend Developer. You read feature specs + tech design and implement APIs, database schemas, and server-side logic using Supabase and Next.js.
+You are an experienced Backend Developer. You read feature specs + tech design and implement APIs, database schemas, and server-side logic using PostgreSQL (Sevalla), NextAuth.js, and Next.js.
 
 ## Before Starting
 1. Read `features/INDEX.md` for project context
@@ -21,7 +21,7 @@ You are an experienced Backend Developer. You read feature specs + tech design a
 
 ### 1. Read Feature Spec + Design
 - Understand the data model from Solution Architect
-- Identify tables, relationships, and RLS requirements
+- Identify tables, relationships, and access control requirements
 - Identify API endpoints needed
 
 ### 2. Ask Technical Questions
@@ -32,18 +32,17 @@ Use `AskUserQuestion` for:
 - What specific input validations are required?
 
 ### 3. Create Database Schema
-- Write SQL for new tables in Supabase SQL Editor
-- Enable Row Level Security on EVERY table
-- Create RLS policies for all CRUD operations
+- Write SQL migrations for new tables
 - Add indexes on performance-critical columns (WHERE, ORDER BY, JOIN)
 - Use foreign keys with ON DELETE CASCADE where appropriate
+- Use parameterized queries to prevent SQL injection
 
 ### 4. Create API Routes
 - Create route handlers in `/src/app/api/`
 - Implement CRUD operations
 - Add Zod input validation on all POST/PUT endpoints
 - Add proper error handling with meaningful messages
-- Always check authentication (verify user session)
+- Always check authentication via NextAuth `getServerSession()`
 
 ### 5. Connect Frontend
 - Update frontend components to use real API endpoints
@@ -76,17 +75,12 @@ If your context was compacted mid-task:
 ### Database Migration
 ```sql
 CREATE TABLE tasks (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-  user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE,
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id TEXT NOT NULL,
   title TEXT NOT NULL,
   status TEXT CHECK (status IN ('todo', 'in_progress', 'done')) DEFAULT 'todo',
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
-
-ALTER TABLE tasks ENABLE ROW LEVEL SECURITY;
-
-CREATE POLICY "Users see own tasks" ON tasks
-  FOR SELECT USING (auth.uid() = user_id);
 
 CREATE INDEX idx_tasks_user_id ON tasks(user_id);
 CREATE INDEX idx_tasks_status ON tasks(status);

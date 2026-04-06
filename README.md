@@ -15,14 +15,13 @@ npm install
 npx playwright install chromium   # one-time: installs browser for E2E tests (~300MB)
 ```
 
-### 2. (Optional) Supabase Setup
+### 2. (Optional) Database Setup
 
 If you need a backend:
 
-1. Create Supabase Project: [supabase.com](https://supabase.com)
+1. Create a PostgreSQL database on [Sevalla](https://sevalla.com) (or any PostgreSQL host)
 2. Copy `.env.local.example` to `.env.local`
-3. Add your Supabase credentials
-4. Uncomment the Supabase client in `src/lib/supabase.ts`
+3. Add your `DATABASE_URL` and `NEXTAUTH_SECRET`
 
 Skip this step if you're building frontend-only (landing pages, portfolios, etc.)
 
@@ -62,7 +61,7 @@ After project initialization, build features one at a time using skills:
 /frontend        Build the UI for features/PROJ-1-user-auth.md
 /backend         Build the API for features/PROJ-1-user-auth.md
 /qa              Test features/PROJ-1-user-auth.md
-/deploy          Deploy to Vercel
+/deploy          Deploy to Sevalla
 ```
 
 Each skill suggests the next step when it finishes. Handoffs are always user-initiated.
@@ -78,9 +77,9 @@ To add more features later, run `/requirements` again - it detects the existing 
 | Requirements Engineer | `/requirements` | Creates feature specs with user stories, acceptance criteria, edge cases |
 | Solution Architect | `/architecture` | Designs PM-friendly tech architecture (no code, only high-level design) |
 | Frontend Developer | `/frontend` | Builds UI with React, Tailwind CSS, and shadcn/ui |
-| Backend Developer | `/backend` | Builds APIs, database schemas, RLS policies with Supabase |
+| Backend Developer | `/backend` | Builds APIs, database schemas with PostgreSQL and NextAuth.js |
 | QA Engineer | `/qa` | Tests features against acceptance criteria + security audit |
-| DevOps | `/deploy` | Deploys to Vercel with production-ready checks |
+| DevOps | `/deploy` | Deploys to Sevalla with production-ready checks |
 | Help | `/help` | Context-aware guide: shows where you are and what to do next |
 
 ### How Skills Work
@@ -100,7 +99,7 @@ To add more features later, run `/requirements` again - it detects the existing 
 3. Build     /frontend      -->  UI components implemented
              /backend       -->  APIs + database (if needed)
 4. Test      /qa            -->  Test results added to feature spec
-5. Ship      /deploy        -->  Deployed to Vercel
+5. Ship      /deploy        -->  Deployed to Sevalla
 ```
 
 ### Feature Tracking
@@ -124,8 +123,10 @@ Every skill reads this file at start and updates it when done, preventing duplic
 | **Language** | TypeScript | Type safety |
 | **Styling** | Tailwind CSS | Utility-first CSS |
 | **UI Library** | shadcn/ui | Copy-paste, customizable components |
-| **Backend** | Supabase (optional) | PostgreSQL + Auth + Storage + Realtime |
-| **Deployment** | Vercel | Zero-config Next.js hosting |
+| **Auth** | NextAuth.js | Open-source auth, built for Next.js |
+| **Database** | PostgreSQL (Sevalla) | Managed PostgreSQL with internal networking |
+| **Storage** | Sevalla Object Storage | S3-compatible, Cloudflare R2 powered |
+| **Deployment** | Sevalla | Application hosting with auto-deploy |
 | **Validation** | Zod | Runtime type validation |
 
 ---
@@ -141,7 +142,7 @@ ai-coding-starter-kit/
 |   +-- rules/                       <-- Auto-applied coding rules
 |   |   +-- general.md                   Git workflow, feature tracking
 |   |   +-- frontend.md                  shadcn/ui, component standards
-|   |   +-- backend.md                   RLS, validation, queries
+|   |   +-- backend.md                   Database, validation, queries
 |   |   +-- security.md                  Secrets, headers, auth
 |   +-- skills/                      <-- Invocable workflows (/command)
 |   |   +-- requirements/SKILL.md        /requirements
@@ -204,7 +205,7 @@ npx shadcn@latest add [component-name]
 ### 4. Production Setup (first deployment)
 
 When you're ready to deploy, the `/deploy` skill guides you through:
-- Vercel setup and deployment
+- Sevalla setup and deployment
 - Error tracking with Sentry
 - Security headers configuration
 - Performance monitoring with Lighthouse

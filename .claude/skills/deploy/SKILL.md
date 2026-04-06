@@ -1,7 +1,7 @@
 ---
 name: deploy
-description: Deploy to Vercel with production-ready checks, error tracking, and security headers setup.
-argument-hint: "feature-spec-path or 'to Vercel'"
+description: Deploy to Sevalla with production-ready checks, error tracking, and security headers setup.
+argument-hint: "feature-spec-path or 'to Sevalla'"
 user-invocable: true
 ---
 
@@ -25,21 +25,23 @@ You are an experienced DevOps Engineer handling deployment, environment setup, a
 - [ ] No Critical/High bugs in test report
 - [ ] All environment variables documented in `.env.local.example`
 - [ ] No secrets committed to git
-- [ ] All database migrations applied in Supabase (if applicable)
+- [ ] All database migrations applied on Sevalla PostgreSQL (if applicable)
 - [ ] All code committed and pushed to remote
 
-### 2. Vercel Setup (first deployment only)
+### 2. Sevalla Setup (first deployment only)
 Guide the user through:
-- [ ] Create Vercel project: `npx vercel` or via vercel.com
+- [ ] Create Sevalla application: via sevalla.com dashboard
 - [ ] Connect GitHub repository for auto-deploy on push
-- [ ] Add all environment variables from `.env.local.example` in Vercel Dashboard
-- [ ] Build settings: Framework Preset = Next.js (auto-detected)
-- [ ] Configure domain (or use default `*.vercel.app`)
+- [ ] Add all environment variables from `.env.local.example` in Sevalla Dashboard
+- [ ] Build settings: select Node.js buildpack, set build command `npm run build`, start command `npm start`
+- [ ] Create PostgreSQL database on Sevalla and note the internal connection string
+- [ ] Set `DATABASE_URL` environment variable with the internal connection string
+- [ ] Configure domain (or use default Sevalla subdomain)
 
 ### 3. Deploy
-- Push to main branch → Vercel auto-deploys
-- Or manual: `npx vercel --prod`
-- Monitor build in Vercel Dashboard
+- Push to main branch → Sevalla auto-deploys
+- Or trigger manual deploy via Sevalla Dashboard
+- Monitor build in Sevalla Dashboard
 
 ### 4. Post-Deployment Verification
 - [ ] Production URL loads correctly
@@ -47,7 +49,7 @@ Guide the user through:
 - [ ] Database connections work (if applicable)
 - [ ] Authentication flows work (if applicable)
 - [ ] No errors in browser console
-- [ ] No errors in Vercel function logs
+- [ ] No errors in Sevalla application logs
 
 ### 5. Production-Ready Essentials
 
@@ -67,33 +69,33 @@ For first deployment, guide the user through these setup guides:
 
 ## Common Issues
 
-### Build fails on Vercel but works locally
-- Check Node.js version (Vercel may use different version)
+### Build fails on Sevalla but works locally
+- Check Node.js version (set in Sevalla build settings or `.nvmrc`)
 - Ensure all dependencies are in package.json (not just devDependencies)
-- Review Vercel build logs for specific error
+- Review Sevalla build logs for specific error
 
 ### Environment variables not available
-- Verify vars are set in Vercel Dashboard (Settings → Environment Variables)
+- Verify vars are set in Sevalla Dashboard (Application → Settings → Environment Variables)
 - Client-side vars need `NEXT_PUBLIC_` prefix
-- Redeploy after adding new env vars (they don't apply retroactively)
+- Redeploy after adding new env vars
 
 ### Database connection errors
-- Verify Supabase URL and anon key in Vercel env vars
-- Check RLS policies allow the operations being attempted
-- Verify Supabase project is not paused (free tier pauses after inactivity)
+- Verify DATABASE_URL is set correctly in Sevalla env vars
+- Use internal connection string for apps hosted on Sevalla (better performance)
+- Check PostgreSQL database is running in Sevalla Dashboard
 
 ## Rollback Instructions
 If production is broken:
-1. **Immediate:** Vercel Dashboard → Deployments → Click "..." on previous working deployment → "Promote to Production"
+1. **Immediate:** Sevalla Dashboard → Deployments → Roll back to previous working deployment
 2. **Fix locally:** Debug the issue, `npm run build`, commit, push
-3. Vercel auto-deploys the fix
+3. Sevalla auto-deploys the fix
 
 ## Full Deployment Checklist
 - [ ] Pre-deployment checks all pass
-- [ ] Vercel build successful
+- [ ] Sevalla build successful
 - [ ] Production URL loads and works
 - [ ] Feature tested in production environment
-- [ ] No console errors, no Vercel log errors
+- [ ] No console errors, no Sevalla log errors
 - [ ] Error tracking setup (Sentry or alternative)
 - [ ] Security headers configured in next.config
 - [ ] Lighthouse score checked (target > 90)
@@ -106,6 +108,6 @@ If production is broken:
 ```
 deploy(PROJ-X): Deploy [feature name] to production
 
-- Production URL: https://your-app.vercel.app
+- Production URL: https://your-app.sevalla.app
 - Deployed: YYYY-MM-DD
 ```

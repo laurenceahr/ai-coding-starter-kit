@@ -16,7 +16,19 @@
       "Bash(kill:*)",
       "Bash(npx shadcn@latest add:*)",
       "Bash(ls:*)",
-      "Bash(cat:*)"
+      "Bash(cat:*)",
+      "Bash(npx next:*)",
+      "WebSearch",
+      "Edit(/.claude/skills/deploy/**)",
+      "Edit(/.claude/skills/backend/**)",
+      "Bash(npx playwright:*)",
+      "Bash(npm test:*)",
+      "Bash(curl -s http://localhost:3000/api/integrations/status)",
+      "Bash(curl -s -I http://localhost:3000/api/integrations/status)",
+      "Bash(curl -s http://localhost:3000/register)"
+    ],
+    "additionalDirectories": [
+      "/Users/laurenceahrabian/Documents/APA - Ahrabian Personal Assistent/main/src/app/api/auth"
     ]
   }
 }

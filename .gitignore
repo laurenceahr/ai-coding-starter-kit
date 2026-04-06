@@ -8,6 +8,8 @@
 
 # testing
 /coverage
+/playwright-report
+/test-results
 
 # next.js
 /.next/
@@ -28,8 +30,8 @@ yarn-error.log*
 # local env files
 .env*.local
 
-# vercel
-.vercel
+# sevalla
+.sevalla
 
 # claude code personal settings
 .claude/settings.local.json

@@ -22,18 +22,20 @@ The most common performance problem with ORMs and query builders:
 
 ```typescript
 // Bad: N+1 (1 query for users + N queries for tasks)
-const { data: users } = await supabase.from('users').select('*')
+const { rows: users } = await db.query('SELECT * FROM users')
 for (const user of users) {
-  const { data: tasks } = await supabase
-    .from('tasks')
-    .select('*')
-    .eq('user_id', user.id)
+  const { rows: tasks } = await db.query(
+    'SELECT * FROM tasks WHERE user_id = $1', [user.id]
+  )
 }
 
 // Good: Single query with join (1 query total)
-const { data } = await supabase
-  .from('users')
-  .select('*, tasks(*)')
+const { rows } = await db.query(`
+  SELECT u.*, json_agg(t.*) AS tasks
+  FROM users u
+  LEFT JOIN tasks t ON t.user_id = u.id
+  GROUP BY u.id
+`)
 ```
 
 ## 3. Always Limit Results
@@ -42,16 +44,15 @@ Never return unbounded results from the database:
 
 ```typescript
 // Bad: Returns ALL rows
-const { data } = await supabase.from('tasks').select('*')
+const { rows } = await db.query('SELECT * FROM tasks')
 
 // Good: Returns max 50 rows
-const { data } = await supabase.from('tasks').select('*').limit(50)
+const { rows } = await db.query('SELECT * FROM tasks LIMIT 50')
 
 // Better: Paginated
-const { data } = await supabase
-  .from('tasks')
-  .select('*')
-  .range(0, 49)  // First 50 rows
+const { rows } = await db.query(
+  'SELECT * FROM tasks ORDER BY created_at DESC LIMIT 50 OFFSET 0'
+)
 ```
 
 ## 4. Caching Strategy
@@ -63,8 +64,8 @@ import { unstable_cache } from 'next/cache'
 
 export const getCategories = unstable_cache(
   async () => {
-    const { data } = await supabase.from('categories').select('*')
-    return data
+    const { rows } = await db.query('SELECT * FROM categories')
+    return rows
   },
   ['categories'],          // Cache key
   { revalidate: 3600 }    // Refresh every hour
@@ -78,14 +79,14 @@ export const getCategories = unstable_cache(
 
 **When NOT to cache:**
 - User-specific data that changes frequently
-- Real-time data (use Supabase Realtime instead)
+- Real-time data (use WebSocket or polling instead)
 
 ## 5. Select Only What You Need
 
 ```typescript
 // Bad: Fetches all columns
-const { data } = await supabase.from('users').select('*')
+const { rows } = await db.query('SELECT * FROM users')
 
 // Good: Fetches only needed columns
-const { data } = await supabase.from('users').select('id, name, avatar_url')
+const { rows } = await db.query('SELECT id, name, avatar_url FROM users')
 ```
